@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Case Converter for Devs</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;
+  --text:#e2e8f0;--muted:#6b7280;--accent:#7c3aed;
+  --green:#10b981;--mono:'SF Mono','Fira Code','Consolas',monospace
+}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:48px 16px}
+h1{font-size:1.1rem;letter-spacing:.15em;color:var(--muted);margin-bottom:32px;text-transform:uppercase}
+h1 span{color:var(--accent)}
+
+#wrap{width:100%;max-width:640px}
+
+#inp{
+  width:100%;padding:14px 16px;font:1rem var(--mono);
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  color:var(--text);outline:none;transition:border .15s
+}
+#inp:focus{border-color:var(--accent)}
+#inp::placeholder{color:var(--muted)}
+
+#detected{height:22px;margin:8px 0 20px;font-size:.75rem;color:var(--muted)}
+#detected b{color:var(--accent)}
+
+.row{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;background:var(--surface);
+  border:1px solid var(--border);border-radius:6px;margin-bottom:8px;
+  transition:border .1s
+}
+.row:hover{border-color:#3a3d4a}
+.label{width:190px;flex-shrink:0;font-size:.72rem;color:var(--muted);letter-spacing:.05em}
+.val{flex:1;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.val.empty{color:var(--muted);font-style:italic;font-size:.8rem}
+.copy{
+  flex-shrink:0;padding:3px 10px;font:inherit;font-size:.72rem;
+  background:transparent;border:1px solid var(--border);border-radius:4px;
+  color:var(--muted);cursor:pointer;transition:all .1s;white-space:nowrap
+}
+.copy:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.copy.ok{border-color:var(--green);color:var(--green)}
+
+footer{margin-top:32px;font-size:.7rem;color:#3a3d4a}
+</style>
+</head>
+<body>
+<h1>Case Converter <span>for Devs</span></h1>
+<div id="wrap">
+  <input id="inp" placeholder="type anything... camelCase, snake_case, kebab-case …" autocomplete="off" spellcheck="false">
+  <div id="detected"></div>
+
+  <div class="row" data-fmt="camel">
+    <span class="label">camelCase <span style="color:#3a3d4a">JS/TS</span></span>
+    <span class="val empty" id="v-camel">—</span>
+    <button class="copy" data-tgt="v-camel">copy</button>
+  </div>
+  <div class="row" data-fmt="pascal">
+    <span class="label">PascalCase <span style="color:#3a3d4a">React / class</span></span>
+    <span class="val empty" id="v-pascal">—</span>
+    <button class="copy" data-tgt="v-pascal">copy</button>
+  </div>
+  <div class="row" data-fmt="snake">
+    <span class="label">snake_case <span style="color:#3a3d4a">Python / Ruby</span></span>
+    <span class="val empty" id="v-snake">—</span>
+    <button class="copy" data-tgt="v-snake">copy</button>
+  </div>
+  <div class="row" data-fmt="kebab">
+    <span class="label">kebab-case <span style="color:#3a3d4a">CSS / URL</span></span>
+    <span class="val empty" id="v-kebab">—</span>
+    <button class="copy" data-tgt="v-kebab">copy</button>
+  </div>
+  <div class="row" data-fmt="screaming">
+    <span class="label">SCREAMING_SNAKE <span style="color:#3a3d4a">const</span></span>
+    <span class="val empty" id="v-screaming">—</span>
+    <button class="copy" data-tgt="v-screaming">copy</button>
+  </div>
+</div>
+<footer>no framework · no deps · ~2 KB</footer>
+
+<script>
+(function(){
+  const inp = document.getElementById('inp');
+  const det = document.getElementById('detected');
+
+  function tokenize(s){
+    s = s.trim();
+    if(!s) return [];
+    // snake / screaming
+    if(s.includes('_'))
+      return s.split('_').map(w=>w.toLowerCase()).filter(Boolean);
+    // kebab
+    if(s.includes('-'))
+      return s.split('-').map(w=>w.toLowerCase()).filter(Boolean);
+    // camel / pascal: split before uppercase runs
+    return s
+      .replace(/([A-Z]+)([A-Z][a-z])/g,'$1 $2')
+      .replace(/([a-z\d])([A-Z])/g,'$1 $2')
+      .trim().split(/\s+/)
+      .map(w=>w.toLowerCase()).filter(Boolean);
+  }
+
+  function detect(s){
+    s = s.trim();
+    if(!s) return null;
+    if(/^[A-Z][A-Z0-9_]*$/.test(s) && s.includes('_')) return 'SCREAMING_SNAKE_CASE';
+    if(s.includes('_'))  return 'snake_case';
+    if(s.includes('-'))  return 'kebab-case';
+    if(/^[A-Z]/.test(s)) return 'PascalCase';
+    if(/^[a-z]/.test(s) && /[A-Z]/.test(s)) return 'camelCase';
+    return 'word';
+  }
+
+  const cap = w => w.charAt(0).toUpperCase() + w.slice(1);
+
+  const formats = {
+    camel:    ws => ws.length ? ws[0] + ws.slice(1).map(cap).join('') : '',
+    pascal:   ws => ws.map(cap).join(''),
+    snake:    ws => ws.join('_'),
+    kebab:    ws => ws.join('-'),
+    screaming:ws => ws.join('_').toUpperCase()
+  };
+
+  function update(){
+    const raw = inp.value;
+    const words = tokenize(raw);
+
+    if(!raw.trim()){
+      det.innerHTML = '';
+      Object.keys(formats).forEach(k=>{
+        const el = document.getElementById('v-'+k);
+        el.textContent = '—'; el.className = 'val empty';
+      });
+      return;
+    }
+
+    const d = detect(raw);
+    det.innerHTML = d ? `detected: <b>${d}</b>` : '';
+
+    Object.keys(formats).forEach(k=>{
+      const result = formats[k](words);
+      const el = document.getElementById('v-'+k);
+      el.textContent = result;
+      el.className = 'val';
+    });
+  }
+
+  inp.addEventListener('input', update);
+
+  // copy buttons
+  document.querySelectorAll('.copy').forEach(btn=>{
+    btn.addEventListener('click',function(){
+      const val = document.getElementById(this.dataset.tgt).textContent;
+      if(!val || val === '—') return;
+      navigator.clipboard.writeText(val).then(()=>{
+        this.textContent = 'copied!';
+        this.classList.add('ok');
+        setTimeout(()=>{ this.textContent='copy'; this.classList.remove('ok'); }, 1200);
+      });
+    });
+  });
+
+  inp.focus();
+})();
+</script>
+</body>
+</html>
