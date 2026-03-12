@@ -3,7 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Case Converter for Devs</title>
+<title>Case Converter for Devs — camelCase, snake_case, PascalCase, kebab-case</title>
+<meta name="description" content="Instantly convert between camelCase, snake_case, PascalCase, kebab-case, and SCREAMING_SNAKE_CASE. A free, lightweight tool for developers. No sign-up required.">
+<meta name="keywords" content="case converter, camelCase, snake_case, PascalCase, kebab-case, SCREAMING_SNAKE_CASE, naming convention, developer tool">
+<meta property="og:title" content="Case Converter for Devs">
+<meta property="og:description" content="Instantly convert between all programming naming conventions. Free, no-framework, zero dependencies.">
+<meta property="og:type" content="website">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -47,6 +52,25 @@ h1 span{color:var(--accent)}
 .copy.ok{border-color:var(--green);color:var(--green)}
 
 footer{margin-top:32px;font-size:.7rem;color:#3a3d4a}
+
+/* Guide */
+#guide{width:100%;max-width:640px;margin-top:64px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+#guide h2{font-size:1.35rem;font-weight:700;color:var(--text);margin:40px 0 12px;letter-spacing:-.01em}
+#guide h2:first-child{margin-top:0}
+#guide h3{font-size:1rem;font-weight:600;color:var(--accent);margin:24px 0 8px}
+#guide p{font-size:.92rem;line-height:1.75;color:#a0aec0;margin-bottom:12px}
+#guide code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-family:var(--mono);font-size:.85em;color:#e2e8f0}
+#guide ul,#guide ol{padding-left:1.4em;margin-bottom:12px}
+#guide li{font-size:.92rem;line-height:1.75;color:#a0aec0;margin-bottom:4px}
+#guide .table-wrap{overflow-x:auto;margin-bottom:16px}
+#guide table{width:100%;border-collapse:collapse;font-size:.85rem}
+#guide th{text-align:left;padding:8px 12px;background:var(--surface);color:var(--muted);border-bottom:1px solid var(--border);font-weight:600;letter-spacing:.04em}
+#guide td{padding:8px 12px;border-bottom:1px solid #1f2230;color:#a0aec0}
+#guide td code{font-size:.82em}
+#guide .faq-item{border-left:2px solid var(--accent);padding:12px 16px;margin-bottom:16px;background:var(--surface);border-radius:0 6px 6px 0}
+#guide .faq-q{font-size:.92rem;font-weight:600;color:var(--text);margin-bottom:6px}
+#guide .faq-a{font-size:.88rem;color:#a0aec0;line-height:1.7;margin:0}
+#guide hr{border:none;border-top:1px solid var(--border);margin:40px 0}
 </style>
 </head>
 <body>
@@ -82,6 +106,193 @@ footer{margin-top:32px;font-size:.7rem;color:#3a3d4a}
   </div>
 </div>
 <footer>no framework · no deps · ~2 KB</footer>
+
+<article id="guide">
+
+  <h2>What is a Case Converter?</h2>
+  <p>
+    A <strong>case converter</strong> is a developer utility that transforms a word or phrase from one
+    naming convention to another instantly. When you write code, the language or framework you use often
+    dictates a specific style for naming variables, functions, classes, and constants. Switching between
+    projects — or even between layers of a single full-stack project — means you regularly need to
+    translate names across styles.
+  </p>
+  <p>
+    This tool tokenizes your input into individual words and reconstructs it in every common convention
+    at once. Paste a database column name like <code>user_created_at</code> and get
+    <code>userCreatedAt</code>, <code>UserCreatedAt</code>, <code>user-created-at</code>, and
+    <code>USER_CREATED_AT</code> in one click.
+  </p>
+
+  <hr>
+
+  <h2>The Importance of Naming Conventions in Programming</h2>
+  <p>
+    Naming conventions are not just stylistic preferences — they are a form of communication.
+    A consistent naming scheme tells other developers (and your future self) what a symbol is and
+    where it belongs in the codebase at a glance.
+  </p>
+  <p>
+    Consider a team building a REST API in Python with a JavaScript frontend. The backend uses
+    <code>snake_case</code> everywhere, but the frontend expects <code>camelCase</code>. Without
+    a shared understanding of these conventions, data mapping errors and subtle bugs creep in.
+    Large codebases at companies like Google and Airbnb enforce naming standards via linters precisely
+    because the cost of inconsistency compounds over time.
+  </p>
+  <ul>
+    <li><strong>Readability:</strong> <code>getUserProfile</code> is instantly parsed; <code>getuserprofile</code> is not.</li>
+    <li><strong>Tooling:</strong> Linters, formatters, and code generators depend on consistent conventions.</li>
+    <li><strong>Cross-language contracts:</strong> APIs, databases, and config files often live in different ecosystems with different norms.</li>
+    <li><strong>Onboarding:</strong> New team members can infer context from a name without reading all surrounding code.</li>
+  </ul>
+
+  <hr>
+
+  <h2>Naming Conventions Explained</h2>
+
+  <h3>camelCase</h3>
+  <p>
+    The first word is all lowercase; every subsequent word starts with a capital letter.
+    There are no separators between words.
+  </p>
+  <p><strong>Example:</strong> <code>getUserById</code>, <code>isLoggedIn</code>, <code>fetchApiResponse</code></p>
+  <p>
+    <strong>Where it's used:</strong> Variables and functions in JavaScript, TypeScript, Java, and Swift.
+    It is also the default style for JSON keys in most REST APIs.
+  </p>
+
+  <h3>PascalCase (UpperCamelCase)</h3>
+  <p>
+    Every word — including the first — begins with a capital letter. Also called <em>UpperCamelCase</em>
+    or <em>StudlyCase</em>.
+  </p>
+  <p><strong>Example:</strong> <code>UserProfile</code>, <code>HttpRequestHandler</code>, <code>AppRouter</code></p>
+  <p>
+    <strong>Where it's used:</strong> Class names and constructor functions across almost every
+    object-oriented language. In React, all component names must be PascalCase so JSX can
+    distinguish them from plain HTML elements.
+  </p>
+
+  <h3>snake_case</h3>
+  <p>
+    All letters are lowercase, and words are separated by underscores. It reads naturally and
+    scales well to long descriptive names.
+  </p>
+  <p><strong>Example:</strong> <code>user_created_at</code>, <code>max_retry_count</code>, <code>parse_json_response</code></p>
+  <p>
+    <strong>Where it's used:</strong> Python (PEP 8 mandates it for variables and functions), Ruby,
+    PostgreSQL column names, Rust, and most Unix shell scripts.
+  </p>
+
+  <h3>kebab-case</h3>
+  <p>
+    All letters are lowercase, and words are joined by hyphens. It looks like words on a skewer —
+    hence the name.
+  </p>
+  <p><strong>Example:</strong> <code>background-color</code>, <code>font-size</code>, <code>my-react-app</code></p>
+  <p>
+    <strong>Where it's used:</strong> CSS properties, HTML data attributes (<code>data-user-id</code>),
+    URL slugs, and npm package names. Note that kebab-case is <em>not</em> valid in most programming
+    languages as an identifier because the hyphen is parsed as a minus operator.
+  </p>
+
+  <h3>SCREAMING_SNAKE_CASE</h3>
+  <p>
+    All letters are uppercase, and words are separated by underscores. The aggressive visual weight
+    signals "this value never changes."
+  </p>
+  <p><strong>Example:</strong> <code>MAX_RETRY_COUNT</code>, <code>API_BASE_URL</code>, <code>DEFAULT_TIMEOUT_MS</code></p>
+  <p>
+    <strong>Where it's used:</strong> Constants and environment variables in virtually every language —
+    Python, JavaScript (<code>const</code> globals), C, Java, and configuration files like <code>.env</code>.
+  </p>
+
+  <hr>
+
+  <h2>Quick Reference Table</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Convention</th>
+          <th>Example</th>
+          <th>Primary Use Cases</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><code>camelCase</code></td><td><code>myVariable</code></td><td>JS/TS variables &amp; functions, JSON keys</td></tr>
+        <tr><td><code>PascalCase</code></td><td><code>MyComponent</code></td><td>Classes, React components, constructors</td></tr>
+        <tr><td><code>snake_case</code></td><td><code>my_variable</code></td><td>Python, Ruby, SQL columns, Rust</td></tr>
+        <tr><td><code>kebab-case</code></td><td><code>my-variable</code></td><td>CSS, URLs, HTML attributes, npm packages</td></tr>
+        <tr><td><code>SCREAMING_SNAKE</code></td><td><code>MY_CONSTANT</code></td><td>Constants, environment variables</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr>
+
+  <h2>Frequently Asked Questions</h2>
+
+  <div class="faq-item">
+    <p class="faq-q">Which case convention should I use for JavaScript?</p>
+    <p class="faq-a">
+      Use <code>camelCase</code> for variables and functions, <code>PascalCase</code> for classes and
+      React components, and <code>SCREAMING_SNAKE_CASE</code> for module-level constants. This follows
+      the Airbnb and Google JavaScript style guides, which are the most widely adopted in the industry.
+    </p>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">Why does Python use snake_case instead of camelCase?</p>
+    <p class="faq-a">
+      PEP 8 — Python's official style guide published in 2001 — chose <code>snake_case</code> because
+      it was judged to be more readable for the kinds of long, descriptive names common in Python.
+      The language's creator, Guido van Rossum, prioritized readability above brevity, and
+      <code>snake_case</code> aligns naturally with how English sentences are read.
+    </p>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">Can I use kebab-case in JavaScript variable names?</p>
+    <p class="faq-a">
+      No. In JavaScript (and most C-style languages), a hyphen is the subtraction operator.
+      Writing <code>my-variable</code> would be parsed as <code>my</code> minus <code>variable</code>.
+      Kebab-case is reserved for contexts that do not parse hyphens as operators: CSS, HTML, URLs,
+      and configuration files.
+    </p>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">What is the difference between PascalCase and camelCase?</p>
+    <p class="faq-a">
+      The only difference is the first letter. <code>camelCase</code> starts with a lowercase letter
+      (<code>myClass</code>), while <code>PascalCase</code> capitalizes the first letter too
+      (<code>MyClass</code>). PascalCase is sometimes called "UpperCamelCase" for this reason.
+      In practice, camelCase is for instances (variables, functions) and PascalCase is for types
+      (classes, interfaces, components).
+    </p>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">Does this tool work offline?</p>
+    <p class="faq-a">
+      Yes. This entire tool is a single HTML file with zero external dependencies or network requests.
+      Once the page is loaded, it works completely offline. You can download <code>index.html</code>
+      and open it directly from your filesystem.
+    </p>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">How does the auto-detection work?</p>
+    <p class="faq-a">
+      The tool checks for underscores first (indicating <code>snake_case</code> or
+      <code>SCREAMING_SNAKE_CASE</code>), then hyphens (<code>kebab-case</code>), then inspects
+      capitalization patterns to distinguish <code>camelCase</code> from <code>PascalCase</code>.
+      The input is then split into a normalized word array and rebuilt in every format simultaneously.
+    </p>
+  </div>
+
+</article>
 
 <script>
 (function(){
