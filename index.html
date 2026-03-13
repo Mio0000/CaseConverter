@@ -54,9 +54,9 @@ h1 span{color:var(--accent)}
 footer{margin-top:32px;font-size:.7rem;color:#3a3d4a}
 
 /* ── Nav ── */
-nav{width:100%;max-width:960px;display:flex;gap:0;margin-bottom:32px;border-bottom:1px solid var(--border);padding-top:0}
+nav{width:100%;max-width:960px;display:flex;flex-wrap:wrap;gap:0;margin-bottom:32px;border-bottom:1px solid var(--border);padding-top:0}
 nav a{
-  padding:10px 22px;font:inherit;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;
+  padding:10px 18px;font:inherit;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;
   color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;
   margin-bottom:-1px;transition:color .15s,border-color .15s
 }
@@ -86,12 +86,21 @@ nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
 <body>
 <nav>
   <a href="index.html" class="active">Case Converter</a>
-  <a href="table.html">Table Generator</a>
-  <a href="json.html">JSON Key Converter</a>
+  <a href="table.html">Table</a>
+  <a href="json.html">JSON Keys</a>
+  <a href="base64.html">Base64</a>
+  <a href="url.html">URL Encode</a>
+  <a href="jwt.html">JWT</a>
+  <a href="timestamp.html">Timestamp</a>
+  <a href="color.html">Color</a>
 </nav>
 <h1>Case Converter <span>for Devs</span></h1>
 <div id="wrap">
-  <input id="inp" placeholder="type anything... camelCase, snake_case, kebab-case …" autocomplete="off" spellcheck="false">
+  <div style="display:flex;gap:8px;margin-bottom:10px">
+    <input id="inp" placeholder="type anything... camelCase, snake_case, kebab-case …" autocomplete="off" spellcheck="false" style="flex:1">
+    <button id="btn-bulk" style="flex-shrink:0;padding:0 14px;font:inherit;font-size:.72rem;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;transition:all .1s" title="Convert multiple lines at once">Bulk</button>
+  </div>
+  <textarea id="bulk-inp" placeholder="One identifier per line…&#10;user_id&#10;createdAt&#10;MAX_RETRIES" autocomplete="off" spellcheck="false" style="display:none;width:100%;height:140px;padding:12px 14px;font:0.88rem var(--mono);background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);outline:none;resize:vertical;line-height:1.6;margin-bottom:10px"></textarea>
   <div id="detected"></div>
 
   <div class="row" data-fmt="camel">
@@ -311,19 +320,19 @@ nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
 
 <script>
 (function(){
-  const inp = document.getElementById('inp');
-  const det = document.getElementById('detected');
+  const inp     = document.getElementById('inp');
+  const bulkInp = document.getElementById('bulk-inp');
+  const det     = document.getElementById('detected');
+  const btnBulk = document.getElementById('btn-bulk');
+  let bulkMode  = false;
 
   function tokenize(s){
     s = s.trim();
     if(!s) return [];
-    // snake / screaming
     if(s.includes('_'))
       return s.split('_').map(w=>w.toLowerCase()).filter(Boolean);
-    // kebab
     if(s.includes('-'))
       return s.split('-').map(w=>w.toLowerCase()).filter(Boolean);
-    // camel / pascal: split before uppercase runs
     return s
       .replace(/([A-Z]+)([A-Z][a-z])/g,'$1 $2')
       .replace(/([a-z\d])([A-Z])/g,'$1 $2')
@@ -352,9 +361,10 @@ nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
     screaming:ws => ws.join('_').toUpperCase()
   };
 
-  function update(){
+  function updateSingle(){
     const raw = inp.value;
-    const words = tokenize(raw);
+    // URL param sync
+    history.replaceState(null,'', raw.trim() ? '?q='+encodeURIComponent(raw) : location.pathname);
 
     if(!raw.trim()){
       det.innerHTML = '';
@@ -364,19 +374,48 @@ nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
       });
       return;
     }
-
     const d = detect(raw);
     det.innerHTML = d ? `detected: <b>${d}</b>` : '';
-
+    const words = tokenize(raw);
     Object.keys(formats).forEach(k=>{
-      const result = formats[k](words);
       const el = document.getElementById('v-'+k);
-      el.textContent = result;
+      el.textContent = formats[k](words);
       el.className = 'val';
     });
   }
 
-  inp.addEventListener('input', update);
+  function updateBulk(){
+    const lines = bulkInp.value.split('\n').map(l=>l.trim()).filter(Boolean);
+    det.innerHTML = lines.length ? `<b>${lines.length}</b> line${lines.length>1?'s':''}` : '';
+    Object.keys(formats).forEach(k=>{
+      const el = document.getElementById('v-'+k);
+      if(!lines.length){ el.textContent='—'; el.className='val empty'; return; }
+      el.textContent = lines.map(l=>formats[k](tokenize(l))).join('\n');
+      el.style.whiteSpace = 'pre';
+      el.className = 'val';
+    });
+  }
+
+  inp.addEventListener('input', updateSingle);
+  bulkInp.addEventListener('input', updateBulk);
+
+  btnBulk.addEventListener('click',()=>{
+    bulkMode = !bulkMode;
+    if(bulkMode){
+      inp.style.display='none'; bulkInp.style.display='block';
+      btnBulk.style.borderColor='var(--accent)'; btnBulk.style.color='var(--accent)';
+      det.innerHTML='';
+      Object.keys(formats).forEach(k=>{
+        const el=document.getElementById('v-'+k);
+        el.textContent='—'; el.className='val empty'; el.style.whiteSpace='';
+      });
+      bulkInp.focus();
+    } else {
+      inp.style.display=''; bulkInp.style.display='none';
+      btnBulk.style.borderColor=''; btnBulk.style.color='';
+      inp.focus(); updateSingle();
+    }
+  });
 
   // copy buttons
   document.querySelectorAll('.copy').forEach(btn=>{
@@ -391,7 +430,9 @@ nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
     });
   });
 
-  inp.focus();
+  // URL param on load
+  const q = new URLSearchParams(location.search).get('q');
+  if(q){ inp.value = q; updateSingle(); } else { inp.focus(); }
 })();
 </script>
 </body>

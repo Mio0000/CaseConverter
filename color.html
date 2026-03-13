@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Color Converter — HEX RGB HSL — Free Developer Tool</title>
+<meta name="description" content="Convert colors between HEX, RGB, and HSL instantly. Free, lightweight, no sign-up required.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;
+  --text:#e2e8f0;--muted:#6b7280;--accent:#7c3aed;
+  --green:#10b981;--red:#ef4444;--mono:'SF Mono','Fira Code','Consolas',monospace
+}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 16px 48px}
+nav{width:100%;max-width:960px;display:flex;flex-wrap:wrap;gap:0;margin-bottom:40px;border-bottom:1px solid var(--border);padding-top:32px}
+nav a{padding:10px 18px;font:inherit;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s}
+nav a:hover{color:var(--text)}
+nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
+h1{font-size:1.1rem;letter-spacing:.15em;color:var(--muted);margin-bottom:28px;text-transform:uppercase;width:100%;max-width:960px}
+h1 span{color:var(--accent)}
+#wrap{width:100%;max-width:640px}
+/* swatch */
+#swatch-row{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+#swatch{width:72px;height:72px;border-radius:10px;border:1px solid var(--border);flex-shrink:0;background:#7c3aed;cursor:pointer;position:relative;overflow:hidden}
+#picker{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+#swatch-info{font-size:.72rem;color:var(--muted);line-height:1.8}
+#swatch-info b{color:var(--text);font-size:.82rem}
+/* input rows */
+.row{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:6px;margin-bottom:8px;transition:border .1s}
+.row:hover{border-color:#3a3d4a}
+.row:focus-within{border-color:var(--accent)}
+.label{width:60px;flex-shrink:0;font-size:.72rem;color:var(--muted);letter-spacing:.05em}
+.row input[type=text]{flex:1;background:transparent;border:none;outline:none;font:0.92rem var(--mono);color:var(--text);min-width:0}
+.row input[type=text]::placeholder{color:var(--muted)}
+.copy{flex-shrink:0;padding:3px 10px;font:inherit;font-size:.72rem;background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--muted);cursor:pointer;transition:all .1s;white-space:nowrap}
+.copy:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.copy.ok{border-color:var(--green);color:var(--green)}
+#error{min-height:20px;margin:8px 0;font-size:.75rem;color:var(--red)}
+/* sliders */
+#sliders{margin-top:20px;display:flex;flex-direction:column;gap:10px}
+.slider-row{display:flex;align-items:center;gap:10px}
+.slider-row label{width:60px;font-size:.68rem;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.slider-row input[type=range]{flex:1;accent-color:var(--accent)}
+.slider-row span{width:36px;text-align:right;font-size:.78rem;color:var(--muted)}
+footer{margin-top:40px;font-size:.7rem;color:#3a3d4a;width:100%;max-width:960px}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html">Case Converter</a>
+  <a href="table.html">Table</a>
+  <a href="json.html">JSON Keys</a>
+  <a href="base64.html">Base64</a>
+  <a href="url.html">URL Encode</a>
+  <a href="jwt.html">JWT</a>
+  <a href="timestamp.html">Timestamp</a>
+  <a href="color.html" class="active">Color</a>
+</nav>
+
+<h1>Color <span>Converter</span></h1>
+
+<div id="wrap">
+  <div id="swatch-row">
+    <div id="swatch">
+      <input type="color" id="picker" value="#7c3aed">
+    </div>
+    <div id="swatch-info">
+      Click swatch to open color picker<br>
+      or type any format below
+    </div>
+  </div>
+
+  <div id="error"></div>
+
+  <div class="row">
+    <span class="label">HEX</span>
+    <input type="text" id="i-hex" placeholder="#7c3aed" autocomplete="off" spellcheck="false">
+    <button class="copy" data-tgt="i-hex">copy</button>
+  </div>
+  <div class="row">
+    <span class="label">RGB</span>
+    <input type="text" id="i-rgb" placeholder="rgb(124, 58, 237)" autocomplete="off" spellcheck="false">
+    <button class="copy" data-tgt="i-rgb">copy</button>
+  </div>
+  <div class="row">
+    <span class="label">HSL</span>
+    <input type="text" id="i-hsl" placeholder="hsl(263, 62%, 58%)" autocomplete="off" spellcheck="false">
+    <button class="copy" data-tgt="i-hsl">copy</button>
+  </div>
+  <div class="row">
+    <span class="label">RGB raw</span>
+    <input type="text" id="i-rgbraw" placeholder="124, 58, 237" autocomplete="off" spellcheck="false">
+    <button class="copy" data-tgt="i-rgbraw">copy</button>
+  </div>
+
+  <div id="sliders">
+    <div class="slider-row">
+      <label>R</label>
+      <input type="range" id="sl-r" min="0" max="255" value="124">
+      <span id="lbl-r">124</span>
+    </div>
+    <div class="slider-row">
+      <label>G</label>
+      <input type="range" id="sl-g" min="0" max="255" value="58">
+      <span id="lbl-g">58</span>
+    </div>
+    <div class="slider-row">
+      <label>B</label>
+      <input type="range" id="sl-b" min="0" max="255" value="237">
+      <span id="lbl-b">237</span>
+    </div>
+  </div>
+</div>
+
+<footer>no framework · no deps · ~2 KB</footer>
+
+<script>
+(function(){
+  const picker = document.getElementById('picker');
+  const swatch = document.getElementById('swatch');
+  const errEl  = document.getElementById('error');
+  const iHex   = document.getElementById('i-hex');
+  const iRgb   = document.getElementById('i-rgb');
+  const iHsl   = document.getElementById('i-hsl');
+  const iRaw   = document.getElementById('i-rgbraw');
+  const slR = document.getElementById('sl-r'), lblR = document.getElementById('lbl-r');
+  const slG = document.getElementById('sl-g'), lblG = document.getElementById('lbl-g');
+  const slB = document.getElementById('sl-b'), lblB = document.getElementById('lbl-b');
+
+  // ── conversion helpers ──
+  function hexToRgb(h){
+    h = h.replace('#','');
+    if(h.length===3) h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+    if(!/^[0-9a-f]{6}$/i.test(h)) return null;
+    return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];
+  }
+  function rgbToHex([r,g,b]){
+    return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
+  }
+  function rgbToHsl([r,g,b]){
+    r/=255; g/=255; b/=255;
+    const max=Math.max(r,g,b), min=Math.min(r,g,b);
+    let h,s,l=(max+min)/2;
+    if(max===min){ h=s=0; } else {
+      const d=max-min;
+      s=l>.5?d/(2-max-min):d/(max+min);
+      switch(max){
+        case r: h=((g-b)/d+(g<b?6:0))/6; break;
+        case g: h=((b-r)/d+2)/6; break;
+        default:h=((r-g)/d+4)/6;
+      }
+    }
+    return [Math.round(h*360),Math.round(s*100),Math.round(l*100)];
+  }
+  function hslToRgb([h,s,l]){
+    s/=100; l/=100;
+    const k=n=>(n+h/30)%12;
+    const a=s*Math.min(l,1-l);
+    const f=n=>l-a*Math.max(-1,Math.min(k(n)-3,Math.min(9-k(n),1)));
+    return [Math.round(f(0)*255),Math.round(f(8)*255),Math.round(f(4)*255)];
+  }
+  function clamp(v,lo,hi){ return Math.max(lo,Math.min(hi,v)); }
+
+  function applyRgb([r,g,b], skipId){
+    r=clamp(r,0,255); g=clamp(g,0,255); b=clamp(b,0,255);
+    const [h,s,l]=rgbToHsl([r,g,b]);
+    const hex=rgbToHex([r,g,b]);
+    if(skipId!=='i-hex')   iHex.value = hex;
+    if(skipId!=='i-rgb')   iRgb.value = `rgb(${r}, ${g}, ${b})`;
+    if(skipId!=='i-hsl')   iHsl.value = `hsl(${h}, ${s}%, ${l}%)`;
+    if(skipId!=='i-rgbraw')iRaw.value = `${r}, ${g}, ${b}`;
+    swatch.style.background = hex;
+    picker.value = hex;
+    slR.value=r; lblR.textContent=r;
+    slG.value=g; lblG.textContent=g;
+    slB.value=b; lblB.textContent=b;
+    errEl.textContent='';
+  }
+
+  function parseHex(s){
+    const rgb=hexToRgb(s.trim());
+    if(!rgb){ errEl.textContent='Invalid HEX color.'; return; }
+    applyRgb(rgb,'i-hex');
+  }
+  function parseRgb(s){
+    const m=s.match(/(\d+)[,\s]+(\d+)[,\s]+(\d+)/);
+    if(!m){ errEl.textContent='Invalid RGB — expected rgb(r, g, b).'; return; }
+    applyRgb([+m[1],+m[2],+m[3]],'i-rgb');
+  }
+  function parseHsl(s){
+    const m=s.match(/(\d+)[,\s]+(\d+)%?[,\s]+(\d+)%?/);
+    if(!m){ errEl.textContent='Invalid HSL — expected hsl(h, s%, l%).'; return; }
+    applyRgb(hslToRgb([+m[1],+m[2],+m[3]]),'i-hsl');
+  }
+  function parseRaw(s){
+    const m=s.match(/(\d+)[,\s]+(\d+)[,\s]+(\d+)/);
+    if(!m){ errEl.textContent='Invalid — expected r, g, b.'; return; }
+    applyRgb([+m[1],+m[2],+m[3]],'i-rgbraw');
+  }
+
+  iHex.addEventListener('input',()=>parseHex(iHex.value));
+  iRgb.addEventListener('input',()=>parseRgb(iRgb.value));
+  iHsl.addEventListener('input',()=>parseHsl(iHsl.value));
+  iRaw.addEventListener('input',()=>parseRaw(iRaw.value));
+
+  picker.addEventListener('input',()=>{ const rgb=hexToRgb(picker.value); if(rgb) applyRgb(rgb,''); });
+
+  [slR,slG,slB].forEach(sl=>{
+    sl.addEventListener('input',()=>{
+      applyRgb([+slR.value,+slG.value,+slB.value],'__sliders__');
+    });
+  });
+
+  // copy buttons
+  document.querySelectorAll('.copy').forEach(btn=>{
+    btn.addEventListener('click',function(){
+      const val = document.getElementById(this.dataset.tgt).value;
+      if(!val) return;
+      navigator.clipboard.writeText(val).then(()=>{
+        this.textContent='ok!'; this.classList.add('ok');
+        setTimeout(()=>{ this.textContent='copy'; this.classList.remove('ok'); },1200);
+      });
+    });
+  });
+
+  // init
+  applyRgb([124,58,237],'');
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unix Timestamp Converter — Epoch to Human Date</title>
+<meta name="description" content="Convert Unix timestamps to human-readable dates and vice versa. Free, lightweight, no sign-up required.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;
+  --text:#e2e8f0;--muted:#6b7280;--accent:#7c3aed;
+  --green:#10b981;--red:#ef4444;--mono:'SF Mono','Fira Code','Consolas',monospace
+}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 16px 48px}
+nav{width:100%;max-width:960px;display:flex;flex-wrap:wrap;gap:0;margin-bottom:40px;border-bottom:1px solid var(--border);padding-top:32px}
+nav a{padding:10px 18px;font:inherit;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s}
+nav a:hover{color:var(--text)}
+nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
+h1{font-size:1.1rem;letter-spacing:.15em;color:var(--muted);margin-bottom:28px;text-transform:uppercase;width:100%;max-width:960px}
+h1 span{color:var(--accent)}
+.btn{padding:6px 16px;font:inherit;font-size:.78rem;letter-spacing:.04em;background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--muted);cursor:pointer;transition:all .1s;white-space:nowrap}
+.btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.ok{border-color:var(--green);color:var(--green)}
+.btn-now{border-color:var(--accent);color:var(--accent)}
+.btn-now:hover{background:var(--accent);color:#fff}
+#panels{width:100%;max-width:960px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:680px){#panels{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px 20px}
+.card h2{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.inp-row{display:flex;gap:8px;margin-bottom:14px}
+input[type=text],input[type=datetime-local]{
+  flex:1;padding:10px 12px;font:0.85rem var(--mono);
+  background:var(--bg);border:1px solid var(--border);border-radius:6px;
+  color:var(--text);outline:none;transition:border .15s;min-width:0
+}
+input[type=text]:focus,input[type=datetime-local]:focus{border-color:var(--accent)}
+input[type=datetime-local]::-webkit-calendar-picker-indicator{filter:invert(.5)}
+.result-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)}
+.result-row:last-child{border-bottom:none}
+.result-label{width:90px;flex-shrink:0;font-size:.68rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.result-val{flex:1;font-size:.85rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.result-val.error{color:var(--red);font-size:.75rem}
+.result-val.empty{color:var(--muted);font-style:italic}
+.copy-sm{flex-shrink:0;padding:2px 8px;font:inherit;font-size:.65rem;background:transparent;border:1px solid var(--border);border-radius:3px;color:var(--muted);cursor:pointer;transition:all .1s}
+.copy-sm:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.copy-sm.ok{border-color:var(--green);color:var(--green)}
+#live{width:100%;max-width:960px;margin-top:14px;font-size:.72rem;color:var(--muted)}
+#live b{color:var(--accent)}
+footer{margin-top:40px;font-size:.7rem;color:#3a3d4a;width:100%;max-width:960px}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html">Case Converter</a>
+  <a href="table.html">Table</a>
+  <a href="json.html">JSON Keys</a>
+  <a href="base64.html">Base64</a>
+  <a href="url.html">URL Encode</a>
+  <a href="jwt.html">JWT</a>
+  <a href="timestamp.html" class="active">Timestamp</a>
+  <a href="color.html">Color</a>
+</nav>
+
+<h1>Unix Timestamp <span>Converter</span></h1>
+
+<div id="panels">
+  <!-- Unix → Human -->
+  <div class="card">
+    <h2>Unix → Human</h2>
+    <div class="inp-row">
+      <input type="text" id="unix-inp" placeholder="e.g. 1700000000" autocomplete="off" spellcheck="false">
+      <button class="btn btn-now" id="btn-now">Now</button>
+    </div>
+    <div class="result-row">
+      <span class="result-label">Local</span>
+      <span class="result-val empty" id="r-local">—</span>
+      <button class="copy-sm" data-tgt="r-local">copy</button>
+    </div>
+    <div class="result-row">
+      <span class="result-label">UTC</span>
+      <span class="result-val empty" id="r-utc">—</span>
+      <button class="copy-sm" data-tgt="r-utc">copy</button>
+    </div>
+    <div class="result-row">
+      <span class="result-label">ISO 8601</span>
+      <span class="result-val empty" id="r-iso">—</span>
+      <button class="copy-sm" data-tgt="r-iso">copy</button>
+    </div>
+    <div class="result-row">
+      <span class="result-label">Relative</span>
+      <span class="result-val empty" id="r-rel">—</span>
+    </div>
+  </div>
+
+  <!-- Human → Unix -->
+  <div class="card">
+    <h2>Human → Unix</h2>
+    <div class="inp-row">
+      <input type="datetime-local" id="dt-inp" step="1">
+    </div>
+    <div class="result-row">
+      <span class="result-label">Unix (s)</span>
+      <span class="result-val empty" id="r-unix">—</span>
+      <button class="copy-sm" data-tgt="r-unix">copy</button>
+    </div>
+    <div class="result-row">
+      <span class="result-label">Unix (ms)</span>
+      <span class="result-val empty" id="r-unixms">—</span>
+      <button class="copy-sm" data-tgt="r-unixms">copy</button>
+    </div>
+    <div class="result-row">
+      <span class="result-label">ISO 8601</span>
+      <span class="result-val empty" id="r-iso2">—</span>
+      <button class="copy-sm" data-tgt="r-iso2">copy</button>
+    </div>
+  </div>
+</div>
+
+<div id="live"></div>
+<footer>no framework · no deps · ~2 KB</footer>
+
+<script>
+(function(){
+  const unixInp = document.getElementById('unix-inp');
+  const dtInp   = document.getElementById('dt-inp');
+  const live    = document.getElementById('live');
+
+  function relTime(ts){
+    const diff = Math.round((Date.now()/1000) - ts);
+    const abs = Math.abs(diff);
+    const future = diff < 0;
+    if(abs < 60)   return (future?'in ':'') + abs + 's' + (future?'':' ago');
+    if(abs < 3600) return (future?'in ':'') + Math.round(abs/60) + 'm' + (future?'':' ago');
+    if(abs < 86400)return (future?'in ':'') + Math.round(abs/3600) + 'h' + (future?'':' ago');
+    return (future?'in ':'') + Math.round(abs/86400) + 'd' + (future?'':' ago');
+  }
+
+  function setVal(id, val, isEmpty){
+    const el = document.getElementById(id);
+    el.textContent = val;
+    el.className = 'result-val' + (isEmpty ? ' empty' : val && val.startsWith('Invalid') ? ' error' : '');
+  }
+
+  function updateUnix(){
+    const raw = unixInp.value.trim();
+    if(!raw){ ['r-local','r-utc','r-iso','r-rel'].forEach(id=>setVal(id,'—',true)); return; }
+    let ts = Number(raw);
+    if(isNaN(ts)){ setVal('r-local','Invalid timestamp',false); return; }
+    // auto-detect ms
+    if(ts > 1e12) ts = ts/1000;
+    const d = new Date(ts*1000);
+    if(isNaN(d.getTime())){ setVal('r-local','Invalid timestamp',false); return; }
+    setVal('r-local', d.toLocaleString(), false);
+    setVal('r-utc',   d.toUTCString(), false);
+    setVal('r-iso',   d.toISOString(), false);
+    setVal('r-rel',   relTime(ts), false);
+  }
+
+  function updateDt(){
+    const raw = dtInp.value;
+    if(!raw){ ['r-unix','r-unixms','r-iso2'].forEach(id=>setVal(id,'—',true)); return; }
+    const d = new Date(raw);
+    if(isNaN(d.getTime())){ setVal('r-unix','Invalid date',false); return; }
+    const ms = d.getTime();
+    setVal('r-unix',   Math.floor(ms/1000).toString(), false);
+    setVal('r-unixms', ms.toString(), false);
+    setVal('r-iso2',   d.toISOString(), false);
+  }
+
+  document.getElementById('btn-now').addEventListener('click',()=>{
+    unixInp.value = Math.floor(Date.now()/1000);
+    updateUnix();
+  });
+
+  // set datetime-local default to now
+  const now = new Date();
+  now.setSeconds(0,0);
+  dtInp.value = new Date(now - now.getTimezoneOffset()*60000).toISOString().slice(0,19);
+  updateDt();
+
+  unixInp.addEventListener('input', updateUnix);
+  dtInp.addEventListener('input', updateDt);
+
+  // live clock
+  function tick(){
+    const ts = Math.floor(Date.now()/1000);
+    live.innerHTML = `Current unix time: <b>${ts}</b>`;
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  // copy buttons
+  document.querySelectorAll('.copy-sm').forEach(btn=>{
+    btn.addEventListener('click',function(){
+      const val = document.getElementById(this.dataset.tgt).textContent;
+      if(!val || val==='—') return;
+      navigator.clipboard.writeText(val).then(()=>{
+        this.textContent='ok!'; this.classList.add('ok');
+        setTimeout(()=>{ this.textContent='copy'; this.classList.remove('ok'); },1200);
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

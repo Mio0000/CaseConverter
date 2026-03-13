@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JWT Decoder — Inspect Header &amp; Payload Instantly</title>
+<meta name="description" content="Paste a JWT token and instantly inspect its header and payload. Free, client-side only, no sign-up required.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;
+  --text:#e2e8f0;--muted:#6b7280;--accent:#7c3aed;
+  --green:#10b981;--red:#ef4444;--yellow:#f59e0b;--mono:'SF Mono','Fira Code','Consolas',monospace
+}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 16px 48px}
+nav{width:100%;max-width:960px;display:flex;flex-wrap:wrap;gap:0;margin-bottom:40px;border-bottom:1px solid var(--border);padding-top:32px}
+nav a{padding:10px 18px;font:inherit;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s}
+nav a:hover{color:var(--text)}
+nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
+h1{font-size:1.1rem;letter-spacing:.15em;color:var(--muted);margin-bottom:28px;text-transform:uppercase;width:100%;max-width:960px}
+h1 span{color:var(--accent)}
+.btn{padding:6px 16px;font:inherit;font-size:.78rem;letter-spacing:.04em;background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--muted);cursor:pointer;transition:all .1s;white-space:nowrap}
+.btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.ok{border-color:var(--green);color:var(--green)}
+#wrap{width:100%;max-width:960px}
+.panel-label{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+#inp{width:100%;height:120px;padding:12px 14px;font:0.82rem var(--mono);background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);outline:none;resize:vertical;transition:border .15s;line-height:1.6;word-break:break-all}
+#inp:focus{border-color:var(--accent)}
+#inp::placeholder{color:var(--muted);font-size:.78rem}
+#panels{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media(max-width:680px){#panels{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px}
+.card-head{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+pre.json{font-size:.82rem;line-height:1.6;white-space:pre;overflow-x:auto;color:var(--text);font-family:var(--mono);min-height:120px}
+pre.json.empty{color:var(--muted);font-style:italic;white-space:normal;font-size:.78rem}
+pre.json.error{color:var(--red);white-space:pre-wrap}
+#exp-bar{width:100%;max-width:960px;margin-top:12px;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:6px;font-size:.78rem;display:none}
+#exp-bar.show{display:flex;align-items:center;gap:10px}
+#exp-label{flex:1}
+.badge{padding:2px 10px;border-radius:4px;font-size:.7rem;font-weight:600}
+.badge.valid{background:#064e3b;color:var(--green)}
+.badge.expired{background:#7f1d1d;color:var(--red)}
+.badge.soon{background:#78350f;color:var(--yellow)}
+#warn{width:100%;max-width:960px;margin-top:10px;font-size:.72rem;color:var(--muted)}
+#warn b{color:var(--yellow)}
+footer{margin-top:40px;font-size:.7rem;color:#3a3d4a;width:100%;max-width:960px}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html">Case Converter</a>
+  <a href="table.html">Table</a>
+  <a href="json.html">JSON Keys</a>
+  <a href="base64.html">Base64</a>
+  <a href="url.html">URL Encode</a>
+  <a href="jwt.html" class="active">JWT</a>
+  <a href="timestamp.html">Timestamp</a>
+  <a href="color.html">Color</a>
+</nav>
+
+<h1>JWT <span>Decoder</span></h1>
+
+<div id="wrap">
+  <div class="panel-label">Paste JWT token</div>
+  <textarea id="inp" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkFsaWNlIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" spellcheck="false"></textarea>
+
+  <div id="panels">
+    <div class="card">
+      <div class="card-head">
+        <span>Header</span>
+        <button class="btn" id="copy-h">Copy</button>
+      </div>
+      <pre class="json empty" id="out-h">Paste a JWT above…</pre>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <span>Payload</span>
+        <button class="btn" id="copy-p">Copy</button>
+      </div>
+      <pre class="json empty" id="out-p">Paste a JWT above…</pre>
+    </div>
+  </div>
+</div>
+
+<div id="exp-bar">
+  <span id="exp-label"></span>
+  <span class="badge" id="exp-badge"></span>
+</div>
+<div id="warn"><b>⚠ Signature not verified.</b> This tool only decodes — never paste production secrets.</div>
+
+<footer>no framework · no deps · ~2 KB</footer>
+
+<script>
+(function(){
+  const inp    = document.getElementById('inp');
+  const outH   = document.getElementById('out-h');
+  const outP   = document.getElementById('out-p');
+  const expBar = document.getElementById('exp-bar');
+  const expLbl = document.getElementById('exp-label');
+  const expBdg = document.getElementById('exp-badge');
+
+  function b64decode(s){
+    s = s.replace(/-/g,'+').replace(/_/g,'/');
+    while(s.length%4) s+='=';
+    return JSON.parse(decodeURIComponent(escape(atob(s))));
+  }
+
+  function update(){
+    const raw = inp.value.trim();
+    if(!raw){
+      [outH,outP].forEach(el=>{ el.textContent='Paste a JWT above…'; el.className='json empty'; });
+      expBar.className='';
+      return;
+    }
+    const parts = raw.split('.');
+    if(parts.length !== 3){
+      outH.textContent = 'Invalid JWT — expected 3 parts separated by dots.';
+      outH.className = 'json error';
+      outP.textContent = '';
+      outP.className = 'json empty';
+      expBar.className='';
+      return;
+    }
+    try{
+      const header  = b64decode(parts[0]);
+      const payload = b64decode(parts[1]);
+      outH.textContent = JSON.stringify(header, null, 2);
+      outH.className = 'json';
+      outP.textContent = JSON.stringify(payload, null, 2);
+      outP.className = 'json';
+
+      // expiry
+      if(payload.exp){
+        const now = Math.floor(Date.now()/1000);
+        const diff = payload.exp - now;
+        const dt = new Date(payload.exp*1000).toLocaleString();
+        expBar.className = 'show';
+        if(diff < 0){
+          expLbl.textContent = `Expired at ${dt}`;
+          expBdg.textContent = 'EXPIRED'; expBdg.className='badge expired';
+        } else if(diff < 300){
+          expLbl.textContent = `Expires at ${dt} (${diff}s)`;
+          expBdg.textContent = 'EXPIRING SOON'; expBdg.className='badge soon';
+        } else {
+          expLbl.textContent = `Expires at ${dt}`;
+          expBdg.textContent = 'VALID'; expBdg.className='badge valid';
+        }
+      } else {
+        expBar.className='';
+      }
+    } catch(e){
+      outH.textContent = 'Decode error: ' + e.message;
+      outH.className = 'json error';
+      outP.textContent = '';
+      outP.className = 'json empty';
+      expBar.className='';
+    }
+  }
+
+  function makeCopy(btnId, srcEl){
+    document.getElementById(btnId).addEventListener('click',()=>{
+      const txt = srcEl.textContent;
+      if(!txt || srcEl.classList.contains('empty') || srcEl.classList.contains('error')) return;
+      navigator.clipboard.writeText(txt).then(()=>{
+        const btn = document.getElementById(btnId);
+        btn.textContent='Copied!'; btn.classList.add('ok');
+        setTimeout(()=>{ btn.textContent='Copy'; btn.classList.remove('ok'); },1400);
+      });
+    });
+  }
+  makeCopy('copy-h', outH);
+  makeCopy('copy-p', outP);
+
+  inp.addEventListener('input', update);
+  inp.focus();
+})();
+</script>
+</body>
+</html>
