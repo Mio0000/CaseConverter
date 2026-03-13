@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Unix Timestamp Converter — Epoch to Human Date</title>
-<meta name="description" content="Convert Unix timestamps to human-readable dates and vice versa. Free, lightweight, no sign-up required.">
+<title>Unix Timestamp Converter — Epoch ↔ Human Date &amp; Time</title>
+<meta name="description" content="Convert Unix timestamps to readable dates, or datetime to Unix epoch. Supports seconds and milliseconds. Live current timestamp display. Free, no sign-up required.">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -48,6 +48,15 @@ input[type=datetime-local]::-webkit-calendar-picker-indicator{filter:invert(.5)}
 #live{width:100%;max-width:960px;margin-top:14px;font-size:.72rem;color:var(--muted)}
 #live b{color:var(--accent)}
 footer{margin-top:40px;font-size:.7rem;color:#3a3d4a;width:100%;max-width:960px}
+#guide{width:100%;max-width:960px;margin-top:56px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+#guide h2{font-size:1.2rem;font-weight:700;color:var(--text);margin:32px 0 10px}
+#guide h2:first-child{margin-top:0}
+#guide h3{font-size:.95rem;font-weight:600;color:var(--accent);margin:18px 0 6px}
+#guide p{font-size:.9rem;line-height:1.75;color:#a0aec0;margin-bottom:10px}
+#guide code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-family:var(--mono);font-size:.82em;color:#e2e8f0}
+#guide ul{padding-left:1.4em;margin-bottom:10px}
+#guide li{font-size:.9rem;line-height:1.75;color:#a0aec0;margin-bottom:3px}
+#guide hr{border:none;border-top:1px solid var(--border);margin:32px 0}
 </style>
 </head>
 <body>
@@ -119,6 +128,41 @@ footer{margin-top:40px;font-size:.7rem;color:#3a3d4a;width:100%;max-width:960px}
 
 <div id="live"></div>
 <footer>no framework · no deps · ~2 KB</footer>
+
+<article id="guide">
+  <h2>What is a Unix Timestamp?</h2>
+  <p>
+    A Unix timestamp (also called <em>epoch time</em>) is the number of seconds that have elapsed since
+    <strong>1970-01-01 00:00:00 UTC</strong>, known as the Unix epoch. It is a timezone-independent,
+    language-agnostic way to represent a point in time as a single integer.
+  </p>
+  <p>
+    The current Unix timestamp is always increasing by 1 every second. As of 2024, it is approximately
+    <code>1,700,000,000</code>. Many systems also use <em>millisecond</em> timestamps (multiply by 1000),
+    which you can recognize because they are around 13 digits rather than 10.
+  </p>
+
+  <hr>
+
+  <h2>Why Do Developers Use Unix Timestamps?</h2>
+  <ul>
+    <li><strong>Timezone-safe:</strong> Timestamps are always UTC-based, eliminating ambiguity across timezones.</li>
+    <li><strong>Easy arithmetic:</strong> Adding 86400 to a timestamp gives exactly one day later — no calendar logic needed.</li>
+    <li><strong>Database storage:</strong> Storing an integer is more compact and faster to index than a datetime string.</li>
+    <li><strong>API contracts:</strong> REST and GraphQL APIs commonly exchange timestamps as Unix integers (e.g. JWT <code>exp</code>, Stripe events).</li>
+    <li><strong>Log files:</strong> System logs (syslog, nginx) often record Unix timestamps for precision and sortability.</li>
+  </ul>
+
+  <hr>
+
+  <h2>Seconds vs Milliseconds</h2>
+  <p>
+    Unix time is traditionally in <strong>seconds</strong> (10 digits as of 2024). JavaScript's
+    <code>Date.now()</code> returns <strong>milliseconds</strong> (13 digits). When you receive a
+    timestamp from an API, check its magnitude: if it's around <code>1.7 × 10¹²</code> it's in
+    milliseconds; if it's around <code>1.7 × 10⁹</code> it's in seconds. This tool auto-detects both.
+  </p>
+</article>
 
 <script>
 (function(){

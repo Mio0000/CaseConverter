@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Base64 Encoder / Decoder — Free Developer Tool</title>
-<meta name="description" content="Encode or decode Base64 strings instantly. Free, lightweight, no sign-up required.">
+<title>Base64 Encoder / Decoder — Online Tool for Developers</title>
+<meta name="description" content="Instantly encode text to Base64 or decode Base64 strings back to plain text. Supports Unicode. 100% client-side — your data never leaves the browser. Free, no sign-up.">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -41,6 +41,15 @@ textarea::placeholder{color:var(--muted);font-size:.78rem}
 #stats{width:100%;max-width:960px;margin-top:10px;font-size:.72rem;color:var(--muted);height:18px}
 #stats b{color:var(--accent)}
 footer{margin-top:40px;font-size:.7rem;color:#3a3d4a;width:100%;max-width:960px}
+#guide{width:100%;max-width:960px;margin-top:56px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+#guide h2{font-size:1.2rem;font-weight:700;color:var(--text);margin:32px 0 10px}
+#guide h2:first-child{margin-top:0}
+#guide h3{font-size:.95rem;font-weight:600;color:var(--accent);margin:18px 0 6px}
+#guide p{font-size:.9rem;line-height:1.75;color:#a0aec0;margin-bottom:10px}
+#guide code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-family:var(--mono);font-size:.82em;color:#e2e8f0}
+#guide ul{padding-left:1.4em;margin-bottom:10px}
+#guide li{font-size:.9rem;line-height:1.75;color:#a0aec0;margin-bottom:3px}
+#guide hr{border:none;border-top:1px solid var(--border);margin:32px 0}
 </style>
 </head>
 <body>
@@ -81,6 +90,40 @@ footer{margin-top:40px;font-size:.7rem;color:#3a3d4a;width:100%;max-width:960px}
 
 <div id="stats"></div>
 <footer>no framework · no deps · ~2 KB</footer>
+
+<article id="guide">
+  <h2>What is Base64 Encoding?</h2>
+  <p>
+    Base64 is a binary-to-text encoding scheme that represents binary data using only 64 printable ASCII characters
+    (A–Z, a–z, 0–9, <code>+</code>, <code>/</code>). It was designed to safely transmit binary data over channels
+    that only support text, such as email (MIME) or JSON APIs.
+  </p>
+  <p>
+    Every 3 bytes of input are converted into 4 Base64 characters, resulting in approximately a 33% increase in size.
+    An <code>=</code> character is appended as padding when the input length is not a multiple of 3.
+  </p>
+
+  <hr>
+
+  <h2>When Should You Use Base64?</h2>
+  <ul>
+    <li><strong>Embedding images in HTML/CSS:</strong> <code>src="data:image/png;base64,..."</code> avoids a network request.</li>
+    <li><strong>API authentication:</strong> HTTP Basic Auth encodes <code>user:password</code> in Base64 in the <code>Authorization</code> header.</li>
+    <li><strong>JSON payloads:</strong> Binary files (PDFs, images) can be embedded in JSON by encoding them as Base64 strings.</li>
+    <li><strong>JWT tokens:</strong> The header and payload sections of a JWT are Base64url-encoded (a URL-safe variant).</li>
+    <li><strong>Email attachments (MIME):</strong> The MIME standard uses Base64 to encode binary attachments in plain-text email bodies.</li>
+  </ul>
+
+  <hr>
+
+  <h2>Base64 vs Base64url</h2>
+  <p>
+    Standard Base64 uses <code>+</code> and <code>/</code>, which are special characters in URLs.
+    <strong>Base64url</strong> replaces them with <code>-</code> and <code>_</code> to make the output
+    safe for use in URLs and filenames without percent-encoding. JWTs use Base64url.
+    This tool uses standard Base64 (<code>btoa</code> / <code>atob</code>).
+  </p>
+</article>
 
 <script>
 (function(){

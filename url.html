@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>URL Encoder / Decoder — Free Developer Tool</title>
-<meta name="description" content="Encode or decode URL strings instantly. Free, lightweight, no sign-up required.">
+<title>URL Encoder / Decoder — encodeURIComponent Online Tool</title>
+<meta name="description" content="Encode or decode URLs and query parameters instantly. Supports encodeURIComponent, decodeURIComponent, and full URL encoding. Free, client-side, no sign-up required.">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -41,6 +41,15 @@ textarea::placeholder{color:var(--muted);font-size:.78rem}
 #stats{width:100%;max-width:960px;margin-top:10px;font-size:.72rem;color:var(--muted);height:18px}
 #stats b{color:var(--accent)}
 footer{margin-top:40px;font-size:.7rem;color:#3a3d4a;width:100%;max-width:960px}
+#guide{width:100%;max-width:960px;margin-top:56px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+#guide h2{font-size:1.2rem;font-weight:700;color:var(--text);margin:32px 0 10px}
+#guide h2:first-child{margin-top:0}
+#guide h3{font-size:.95rem;font-weight:600;color:var(--accent);margin:18px 0 6px}
+#guide p{font-size:.9rem;line-height:1.75;color:#a0aec0;margin-bottom:10px}
+#guide code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-family:var(--mono);font-size:.82em;color:#e2e8f0}
+#guide ul{padding-left:1.4em;margin-bottom:10px}
+#guide li{font-size:.9rem;line-height:1.75;color:#a0aec0;margin-bottom:3px}
+#guide hr{border:none;border-top:1px solid var(--border);margin:32px 0}
 </style>
 </head>
 <body>
@@ -82,6 +91,43 @@ footer{margin-top:40px;font-size:.7rem;color:#3a3d4a;width:100%;max-width:960px}
 
 <div id="stats"></div>
 <footer>no framework · no deps · ~2 KB</footer>
+
+<article id="guide">
+  <h2>What is URL Encoding?</h2>
+  <p>
+    URL encoding (also called percent-encoding) replaces unsafe ASCII characters with a <code>%</code> sign
+    followed by two hexadecimal digits. For example, a space becomes <code>%20</code> and
+    <code>&amp;</code> becomes <code>%26</code>. This ensures that special characters in URLs do not
+    conflict with the URL syntax itself.
+  </p>
+
+  <hr>
+
+  <h2>encodeURIComponent vs encodeURI vs Full URL Encode</h2>
+  <ul>
+    <li>
+      <strong>encodeURIComponent</strong> — Encodes everything except letters, digits, and <code>- _ . ! ~ * ' ( )</code>.
+      Use this for <em>query parameter values</em>: <code>q=hello%20world</code>.
+    </li>
+    <li>
+      <strong>decodeURIComponent</strong> — Reverses <code>encodeURIComponent</code>. Use when reading a URL-encoded query string.
+    </li>
+    <li>
+      <strong>Full URL encode (encodeURI)</strong> — Preserves the URL structure (<code>://</code>, <code>/</code>, <code>?</code>, <code>=</code>, <code>&amp;</code>)
+      while encoding only characters that are completely illegal in URLs. Use this for a <em>complete URL</em>.
+    </li>
+  </ul>
+
+  <hr>
+
+  <h2>Common Use Cases</h2>
+  <ul>
+    <li><strong>Query strings:</strong> Spaces and special chars in search terms must be encoded: <code>q=C%2B%2B+tutorial</code>.</li>
+    <li><strong>API calls:</strong> Path segments or parameter values containing slashes, ampersands, or equals signs require encoding.</li>
+    <li><strong>Redirect URLs:</strong> A <code>redirect_uri</code> parameter must itself be URL-encoded so it isn't parsed as part of the outer URL.</li>
+    <li><strong>Form data:</strong> HTML form submissions use a similar scheme called <em>application/x-www-form-urlencoded</em>.</li>
+  </ul>
+</article>
 
 <script>
 (function(){

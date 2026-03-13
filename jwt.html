@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>JWT Decoder — Inspect Header &amp; Payload Instantly</title>
-<meta name="description" content="Paste a JWT token and instantly inspect its header and payload. Free, client-side only, no sign-up required.">
+<title>JWT Decoder — Inspect JSON Web Token Header &amp; Payload Online</title>
+<meta name="description" content="Paste a JWT and instantly decode its header and payload. Checks expiry status. 100% client-side — your token never leaves the browser. Free, no sign-up required.">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -44,6 +44,15 @@ pre.json.error{color:var(--red);white-space:pre-wrap}
 #warn{width:100%;max-width:960px;margin-top:10px;font-size:.72rem;color:var(--muted)}
 #warn b{color:var(--yellow)}
 footer{margin-top:40px;font-size:.7rem;color:#3a3d4a;width:100%;max-width:960px}
+#guide{width:100%;max-width:960px;margin-top:56px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+#guide h2{font-size:1.2rem;font-weight:700;color:var(--text);margin:32px 0 10px}
+#guide h2:first-child{margin-top:0}
+#guide h3{font-size:.95rem;font-weight:600;color:var(--accent);margin:18px 0 6px}
+#guide p{font-size:.9rem;line-height:1.75;color:#a0aec0;margin-bottom:10px}
+#guide code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-family:var(--mono);font-size:.82em;color:#e2e8f0}
+#guide ul{padding-left:1.4em;margin-bottom:10px}
+#guide li{font-size:.9rem;line-height:1.75;color:#a0aec0;margin-bottom:3px}
+#guide hr{border:none;border-top:1px solid var(--border);margin:32px 0}
 </style>
 </head>
 <body>
@@ -89,6 +98,40 @@ footer{margin-top:40px;font-size:.7rem;color:#3a3d4a;width:100%;max-width:960px}
 <div id="warn"><b>⚠ Signature not verified.</b> This tool only decodes — never paste production secrets.</div>
 
 <footer>no framework · no deps · ~2 KB</footer>
+
+<article id="guide">
+  <h2>What is a JWT (JSON Web Token)?</h2>
+  <p>
+    A JWT is a compact, URL-safe token format defined in <a href="https://datatracker.ietf.org/doc/html/rfc7519" style="color:var(--accent)">RFC 7519</a>.
+    It consists of three Base64url-encoded parts separated by dots:
+    <code>header.payload.signature</code>.
+  </p>
+  <ul>
+    <li><strong>Header:</strong> Declares the token type (<code>JWT</code>) and signing algorithm (e.g. <code>HS256</code>, <code>RS256</code>).</li>
+    <li><strong>Payload:</strong> Contains <em>claims</em> — statements about the user and metadata, such as <code>sub</code> (subject), <code>iat</code> (issued at), <code>exp</code> (expiry).</li>
+    <li><strong>Signature:</strong> Verifies the token hasn't been tampered with. Computed from the header + payload using the secret or private key.</li>
+  </ul>
+
+  <hr>
+
+  <h2>When is JWT Used?</h2>
+  <ul>
+    <li><strong>API authentication:</strong> After login, the server issues a JWT. The client sends it in the <code>Authorization: Bearer &lt;token&gt;</code> header on subsequent requests.</li>
+    <li><strong>Single Sign-On (SSO):</strong> A JWT issued by an identity provider (Auth0, Okta, Cognito) can be trusted by multiple services.</li>
+    <li><strong>Stateless sessions:</strong> Unlike server-side sessions, JWTs are self-contained — no database lookup needed to verify a user's identity.</li>
+  </ul>
+
+  <hr>
+
+  <h2>Standard Payload Claims</h2>
+  <ul>
+    <li><code>sub</code> — Subject: who the token refers to (usually a user ID)</li>
+    <li><code>iat</code> — Issued At: Unix timestamp of when the token was created</li>
+    <li><code>exp</code> — Expiration Time: Unix timestamp after which the token is invalid</li>
+    <li><code>iss</code> — Issuer: who created and signed the token</li>
+    <li><code>aud</code> — Audience: who the token is intended for</li>
+  </ul>
+</article>
 
 <script>
 (function(){

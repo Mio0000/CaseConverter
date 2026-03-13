@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>JSON Key Converter — Convert JSON keys to camelCase, snake_case, PascalCase</title>
-<meta name="description" content="Paste JSON and instantly convert all keys to camelCase, snake_case, PascalCase, kebab-case, or SCREAMING_SNAKE_CASE. Recursive, free, no sign-up required.">
+<title>JSON Key Converter — camelCase, snake_case, PascalCase Online</title>
+<meta name="description" content="Convert all JSON keys to camelCase, snake_case, PascalCase, kebab-case, or SCREAMING_SNAKE_CASE recursively. Perfect for API response mapping. Free, client-side, no sign-up.">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -76,6 +76,15 @@ textarea::placeholder{color:var(--muted);font-size:.78rem}
 #stats b{color:var(--accent)}
 
 footer{margin-top:40px;font-size:.7rem;color:#3a3d4a;width:100%;max-width:960px}
+#guide{width:100%;max-width:960px;margin-top:56px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+#guide h2{font-size:1.2rem;font-weight:700;color:var(--text);margin:32px 0 10px}
+#guide h2:first-child{margin-top:0}
+#guide h3{font-size:.95rem;font-weight:600;color:var(--accent);margin:18px 0 6px}
+#guide p{font-size:.9rem;line-height:1.75;color:#a0aec0;margin-bottom:10px}
+#guide code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-family:var(--mono);font-size:.82em;color:#e2e8f0}
+#guide ul{padding-left:1.4em;margin-bottom:10px}
+#guide li{font-size:.9rem;line-height:1.75;color:#a0aec0;margin-bottom:3px}
+#guide hr{border:none;border-top:1px solid var(--border);margin:32px 0}
 </style>
 </head>
 <body>
@@ -121,6 +130,40 @@ footer{margin-top:40px;font-size:.7rem;color:#3a3d4a;width:100%;max-width:960px}
 <div id="stats"></div>
 
 <footer>no framework · no deps · ~2 KB</footer>
+
+<article id="guide">
+  <h2>Why Convert JSON Keys?</h2>
+  <p>
+    Different programming languages and frameworks enforce different naming conventions for object keys.
+    When data crosses language boundaries — such as a Python backend sending JSON to a JavaScript frontend —
+    the key format often needs to change. Doing this by hand across hundreds of keys is error-prone and slow.
+  </p>
+  <ul>
+    <li><strong>Python / Ruby backends</strong> use <code>snake_case</code>: <code>user_created_at</code></li>
+    <li><strong>JavaScript / TypeScript frontends</strong> use <code>camelCase</code>: <code>userCreatedAt</code></li>
+    <li><strong>React components and classes</strong> use <code>PascalCase</code>: <code>UserCreatedAt</code></li>
+    <li><strong>Environment variables and constants</strong> use <code>SCREAMING_SNAKE_CASE</code>: <code>USER_CREATED_AT</code></li>
+  </ul>
+
+  <hr>
+
+  <h2>Common Use Cases</h2>
+  <ul>
+    <li><strong>API response mapping:</strong> Convert a <code>snake_case</code> REST API response to <code>camelCase</code> for use in JavaScript.</li>
+    <li><strong>Config file generation:</strong> Transform a JS config object's keys to <code>SCREAMING_SNAKE_CASE</code> for a <code>.env</code> file.</li>
+    <li><strong>Database ↔ Frontend:</strong> SQL column names (<code>snake_case</code>) rarely match the <code>camelCase</code> expected by frontend frameworks.</li>
+    <li><strong>Documentation:</strong> Align JSON examples in docs with the conventions of the target language.</li>
+  </ul>
+
+  <hr>
+
+  <h2>How It Works</h2>
+  <p>
+    The converter recursively traverses the entire JSON structure — including nested objects and arrays —
+    and renames every key. Values (strings, numbers, booleans, nulls) are left completely unchanged.
+    Only the keys are converted.
+  </p>
+</article>
 
 <script>
 (function(){
