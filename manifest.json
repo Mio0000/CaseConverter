@@ -1,0 +1,26 @@
+{
+  "name": "DevToolbox",
+  "short_name": "DevToolbox",
+  "description": "Developer utilities: Case Converter, Base64, URL Encode, JWT Decoder, Timestamp, Color Converter, JSON Key Converter, Markdown Table Generator — all offline.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0f1117",
+  "theme_color": "#7c3aed",
+  "lang": "en",
+  "categories": ["developer", "utilities", "productivity"],
+  "icons": [
+    {
+      "src": "./icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    { "name": "Case Converter", "url": "./index.html",     "description": "Convert camelCase, snake_case, PascalCase, kebab-case" },
+    { "name": "Base64",         "url": "./base64.html",    "description": "Encode or decode Base64 strings" },
+    { "name": "JWT Decoder",    "url": "./jwt.html",       "description": "Decode JSON Web Token header and payload" },
+    { "name": "Timestamp",      "url": "./timestamp.html", "description": "Convert Unix timestamps to human dates" }
+  ]
+}
