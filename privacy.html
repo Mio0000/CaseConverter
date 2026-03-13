@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Privacy Policy — DevToolbox</title>
+<meta name="description" content="Privacy policy for DevToolbox. All processing happens in your browser — no data is ever sent to a server.">
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#7c3aed">
+<meta name="application-name" content="DevToolbox">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="DevToolbox">
+<link rel="apple-touch-icon" href="./icons/icon.svg">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;
+  --text:#e2e8f0;--muted:#6b7280;--accent:#7c3aed;
+  --green:#10b981;--mono:'SF Mono','Fira Code','Consolas',monospace
+}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 16px 64px}
+nav{width:100%;max-width:960px;display:flex;flex-wrap:wrap;gap:0;margin-bottom:40px;border-bottom:1px solid var(--border);padding-top:32px}
+nav a{padding:10px 18px;font:inherit;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s}
+nav a:hover{color:var(--text)}
+nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
+#doc{width:100%;max-width:720px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+#doc h1{font-size:1.6rem;font-weight:800;color:var(--text);margin-bottom:6px;letter-spacing:-.02em}
+.updated{font-size:.8rem;color:var(--muted);margin-bottom:40px}
+#doc h2{font-size:1.05rem;font-weight:700;color:var(--text);margin:36px 0 10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+#doc p{font-size:.92rem;line-height:1.8;color:#a0aec0;margin-bottom:12px}
+#doc ul,#doc ol{padding-left:1.5em;margin-bottom:14px}
+#doc li{font-size:.92rem;line-height:1.8;color:#a0aec0;margin-bottom:4px}
+#doc a{color:var(--accent);text-decoration:none}
+#doc a:hover{text-decoration:underline}
+.highlight{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:0 6px 6px 0;padding:14px 18px;margin-bottom:16px}
+.highlight p{color:var(--text);margin:0;font-size:.9rem}
+.highlight p strong{color:var(--green)}
+footer{margin-top:48px;font-size:.7rem;color:#3a3d4a;width:100%;max-width:720px}
+footer a{color:var(--muted);text-decoration:none;transition:color .12s}
+footer a:hover{color:var(--accent)}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html">Case Converter</a>
+  <a href="table.html">Table</a>
+  <a href="json.html">JSON Keys</a>
+  <a href="base64.html">Base64</a>
+  <a href="url.html">URL Encode</a>
+  <a href="jwt.html">JWT</a>
+  <a href="timestamp.html">Timestamp</a>
+  <a href="color.html">Color</a>
+</nav>
+
+<article id="doc">
+  <h1>Privacy Policy</h1>
+  <p class="updated">Last updated: March 2026</p>
+
+  <div class="highlight">
+    <p><strong>The short version:</strong> DevToolbox processes everything inside your browser. No data you enter is ever transmitted to a server. We don't have a server. We don't collect, store, or sell your data.</p>
+  </div>
+
+  <h2>1. Who We Are</h2>
+  <p>DevToolbox is a free, open-source collection of developer utilities hosted on GitHub Pages. There is no company, no account system, and no backend infrastructure behind this site.</p>
+
+  <h2>2. Data We Do NOT Collect</h2>
+  <p>We do not collect, transmit, or store any of the following:</p>
+  <ul>
+    <li>Text you type into any input field</li>
+    <li>JSON, JWT tokens, Base64 strings, or any other data you paste into the tools</li>
+    <li>Your IP address (no server-side logging)</li>
+    <li>Your name, email address, or any personally identifiable information</li>
+    <li>Usage analytics or behavioural tracking (no Google Analytics, no Mixpanel, no pixels)</li>
+  </ul>
+  <p>All computation — case conversion, Base64 encoding, JWT decoding, timestamp conversion, color conversion — happens entirely in your browser using JavaScript. Nothing leaves your device.</p>
+
+  <h2>3. localStorage (Browser Storage)</h2>
+  <p>DevToolbox uses your browser's <strong>localStorage API</strong> for one purpose only:</p>
+  <ul>
+    <li><strong>Pinned tools (Favorites):</strong> Storing which tools you have starred in the navigation bar. This data is a simple list of filenames (e.g. <code>["base64.html", "jwt.html"]</code>). It contains no personal information and never leaves your browser.</li>
+  </ul>
+  <p>You can clear this data at any time by opening your browser's developer tools → Application → Local Storage → Delete.</p>
+
+  <h2>4. Cookies</h2>
+  <p>DevToolbox itself sets <strong>no cookies</strong>.</p>
+  <p>However, this site may display advertisements served by <strong>Google AdSense</strong>. Google uses cookies and similar technologies to serve personalized ads based on your browsing history. This is governed by <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.</p>
+  <p>You can opt out of personalized advertising at any time:</p>
+  <ul>
+    <li><a href="https://adssettings.google.com" target="_blank" rel="noopener">Google Ad Settings</a></li>
+    <li><a href="https://optout.aboutads.info" target="_blank" rel="noopener">Digital Advertising Alliance Opt-Out</a></li>
+    <li><a href="https://optout.networkadvertising.org" target="_blank" rel="noopener">Network Advertising Initiative Opt-Out</a></li>
+  </ul>
+
+  <h2>5. Third-Party Advertising (Google AdSense)</h2>
+  <p>We use Google AdSense to display advertisements on this site. As a third-party vendor, Google may use cookies to serve ads based on your prior visits to this website or other websites. Google's use of advertising cookies enables it and its partners to serve ads based on your visit here and/or other sites on the Internet.</p>
+  <p>We do not have access to, or control over, the cookies that third-party advertisers use. The ads displayed are governed by <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener">Google's advertising policies</a>.</p>
+
+  <h2>6. Service Worker &amp; Offline Cache</h2>
+  <p>DevToolbox registers a <strong>Service Worker</strong> to enable offline usage. The service worker caches the HTML, CSS, and JavaScript files of this site locally on your device. This cache contains only the site's own files — no user data is ever written to the cache.</p>
+
+  <h2>7. GitHub Pages Hosting</h2>
+  <p>This site is hosted on <strong>GitHub Pages</strong>. GitHub may collect server access logs (IP addresses, user agents) as part of their standard infrastructure operations. This is outside our control. See <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">GitHub's Privacy Statement</a> for details.</p>
+
+  <h2>8. Children's Privacy</h2>
+  <p>DevToolbox does not knowingly collect information from children under 13. The site contains no forms, no accounts, and no mechanisms to collect personal data from any user of any age.</p>
+
+  <h2>9. Changes to This Policy</h2>
+  <p>We may update this policy if we add features that change how data is handled (such as enabling advertisements). The "Last updated" date at the top of this page will reflect any changes. Continued use of the site constitutes acceptance of the updated policy.</p>
+
+  <h2>10. Contact</h2>
+  <p>If you have questions about this privacy policy, please open an issue on our <a href="https://github.com/Mio0000/CaseConverter" target="_blank" rel="noopener">GitHub repository</a>.</p>
+</article>
+
+<footer>no framework · no deps · ~2 KB &nbsp;·&nbsp; <a href="./index.html">Home</a> &nbsp;·&nbsp; <a href="./about.html">About</a> &nbsp;·&nbsp; <a href="./privacy.html">Privacy</a></footer>
+
+<script src="./nav.js" defer></script>
+</body>
+</html>

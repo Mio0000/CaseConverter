@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>About — DevToolbox</title>
+<meta name="description" content="DevToolbox is a minimalist, zero-dependency developer utility suite. 8 tools. Under 17 KB per page. Works offline. No sign-up, no tracking, no nonsense.">
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#7c3aed">
+<meta name="application-name" content="DevToolbox">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="DevToolbox">
+<link rel="apple-touch-icon" href="./icons/icon.svg">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;
+  --text:#e2e8f0;--muted:#6b7280;--accent:#7c3aed;
+  --green:#10b981;--mono:'SF Mono','Fira Code','Consolas',monospace
+}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 16px 64px}
+nav{width:100%;max-width:960px;display:flex;flex-wrap:wrap;gap:0;margin-bottom:40px;border-bottom:1px solid var(--border);padding-top:32px}
+nav a{padding:10px 18px;font:inherit;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s}
+nav a:hover{color:var(--text)}
+nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
+#doc{width:100%;max-width:720px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+#doc h1{font-size:1.6rem;font-weight:800;color:var(--text);margin-bottom:6px;letter-spacing:-.02em}
+.tagline{font-size:1rem;color:var(--muted);margin-bottom:40px;font-family:var(--mono)}
+#doc h2{font-size:1.05rem;font-weight:700;color:var(--text);margin:36px 0 10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+#doc p{font-size:.92rem;line-height:1.8;color:#a0aec0;margin-bottom:12px}
+#doc ul{padding-left:1.5em;margin-bottom:14px}
+#doc li{font-size:.92rem;line-height:1.8;color:#a0aec0;margin-bottom:6px}
+#doc a{color:var(--accent);text-decoration:none}
+#doc a:hover{text-decoration:underline}
+#doc code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-family:var(--mono);font-size:.85em;color:#e2e8f0}
+/* Stats grid */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:20px 0 28px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px 18px}
+.stat-num{font-size:1.8rem;font-weight:800;color:var(--accent);font-family:var(--mono);line-height:1}
+.stat-lbl{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+/* Tools list */
+.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+@media(max-width:500px){.tool-grid{grid-template-columns:1fr}}
+.tool-item{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;font-size:.85rem;color:#a0aec0;text-decoration:none;transition:border-color .12s}
+.tool-item:hover{border-color:var(--accent);color:var(--text)}
+.tool-key{font-size:.65rem;background:#0f1117;border:1px solid var(--border);border-radius:3px;padding:1px 5px;color:var(--muted);font-family:var(--mono)}
+/* Philosophy blocks */
+.phil{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+.phil-item{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:6px}
+.phil-icon{font-size:1.1rem;flex-shrink:0;margin-top:1px}
+.phil-body{flex:1}
+.phil-title{font-size:.85rem;font-weight:700;color:var(--text);margin-bottom:3px}
+.phil-desc{font-size:.82rem;color:#a0aec0;line-height:1.65}
+footer{margin-top:48px;font-size:.7rem;color:#3a3d4a;width:100%;max-width:720px}
+footer a{color:var(--muted);text-decoration:none;transition:color .12s}
+footer a:hover{color:var(--accent)}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html">Case Converter</a>
+  <a href="table.html">Table</a>
+  <a href="json.html">JSON Keys</a>
+  <a href="base64.html">Base64</a>
+  <a href="url.html">URL Encode</a>
+  <a href="jwt.html">JWT</a>
+  <a href="timestamp.html">Timestamp</a>
+  <a href="color.html">Color</a>
+</nav>
+
+<article id="doc">
+  <h1>DevToolbox</h1>
+  <p class="tagline">// the developer's toolbox that stays out of your way</p>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-num">8</div><div class="stat-lbl">Tools</div></div>
+    <div class="stat"><div class="stat-num">&lt;17<span style="font-size:1rem">KB</span></div><div class="stat-lbl">Per page</div></div>
+    <div class="stat"><div class="stat-num">0</div><div class="stat-lbl">Dependencies</div></div>
+    <div class="stat"><div class="stat-num">0</div><div class="stat-lbl">Servers</div></div>
+  </div>
+
+  <h2>What is DevToolbox?</h2>
+  <p>DevToolbox is a suite of everyday developer utilities that runs entirely in your browser. No npm install. No webpack. No login. No tracking. Just open a page, use the tool, close the tab.</p>
+  <p>Every tool is a single self-contained HTML file. The entire site weighs less than a typical JPEG. It works offline. It installs as a native app on your desktop or taskbar via PWA. And it never phones home.</p>
+
+  <h2>The Tools</h2>
+  <div class="tool-grid">
+    <a href="index.html" class="tool-item"><span class="tool-key">1</span> Case Converter</a>
+    <a href="table.html" class="tool-item"><span class="tool-key">2</span> Markdown Table</a>
+    <a href="json.html" class="tool-item"><span class="tool-key">3</span> JSON Key Converter</a>
+    <a href="base64.html" class="tool-item"><span class="tool-key">4</span> Base64 Encoder</a>
+    <a href="url.html" class="tool-item"><span class="tool-key">5</span> URL Encoder</a>
+    <a href="jwt.html" class="tool-item"><span class="tool-key">6</span> JWT Decoder</a>
+    <a href="timestamp.html" class="tool-item"><span class="tool-key">7</span> Timestamp Converter</a>
+    <a href="color.html" class="tool-item"><span class="tool-key">8</span> Color Converter</a>
+  </div>
+  <p>Press <code>1</code>–<code>8</code> anywhere on the site to jump directly to a tool. Press <code>⌘K</code> for the command palette. Press <code>?</code> to see all shortcuts.</p>
+
+  <h2>Philosophy</h2>
+  <div class="phil">
+    <div class="phil-item">
+      <span class="phil-icon">⚡</span>
+      <div class="phil-body">
+        <div class="phil-title">Zero dependencies</div>
+        <div class="phil-desc">No React, no Vue, no Tailwind, no lodash. Every tool is written in vanilla HTML, CSS, and JavaScript. The browser is the framework.</div>
+      </div>
+    </div>
+    <div class="phil-item">
+      <span class="phil-icon">🔒</span>
+      <div class="phil-body">
+        <div class="phil-title">Privacy by architecture</div>
+        <div class="phil-desc">There is no server to send data to. JWT tokens, Base64 strings, JSON — everything you paste stays in your browser's memory and is discarded when you close the tab.</div>
+      </div>
+    </div>
+    <div class="phil-item">
+      <span class="phil-icon">📦</span>
+      <div class="phil-body">
+        <div class="phil-title">Offline-first</div>
+        <div class="phil-desc">A service worker caches every page on first visit. After that, DevToolbox works with no internet connection — on a plane, in a basement, behind a corporate firewall.</div>
+      </div>
+    </div>
+    <div class="phil-item">
+      <span class="phil-icon">⌨</span>
+      <div class="phil-body">
+        <div class="phil-title">Keyboard-first</div>
+        <div class="phil-desc">Every tool is reachable in one keystroke. The command palette (<code>⌘K</code>) lets you jump anywhere without reaching for the mouse. Developers live in the keyboard.</div>
+      </div>
+    </div>
+    <div class="phil-item">
+      <span class="phil-icon">🌙</span>
+      <div class="phil-body">
+        <div class="phil-title">Dark by default</div>
+        <div class="phil-desc">Because your terminal is dark, your editor is dark, and every other tool that fights this is wrong.</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Tech Stack</h2>
+  <ul>
+    <li><strong>HTML / CSS / JavaScript</strong> — plain, standard, no transpilation</li>
+    <li><strong>GitHub Pages</strong> — static hosting, zero infrastructure cost</li>
+    <li><strong>Service Worker API</strong> — offline support and PWA installability</li>
+    <li><strong>localStorage</strong> — persisting pinned tools, nothing else</li>
+    <li><strong>Zero build tools</strong> — edit a file, push to git, done</li>
+  </ul>
+
+  <h2>Why I Built This</h2>
+  <p>I got tired of Googling "base64 encode online" and landing on ad-bloated, login-walled, cookie-banner-filled sites that still managed to feel slow. Every one of those tools is trivial to implement. So I built them all in a weekend, made them fast, made them private, and made them installable.</p>
+  <p>The goal is a toolbox that feels like a native app — because it is one. You install it once from the browser and it's in your Dock, offline, forever, with no update prompts, no subscriptions, no dark patterns.</p>
+
+  <h2>Open Source</h2>
+  <p>DevToolbox is open source. The code is on <a href="https://github.com/Mio0000/CaseConverter" target="_blank" rel="noopener">GitHub</a>. Issues, suggestions, and pull requests are welcome.</p>
+</article>
+
+<footer>no framework · no deps · ~2 KB &nbsp;·&nbsp; <a href="./index.html">Home</a> &nbsp;·&nbsp; <a href="./about.html">About</a> &nbsp;·&nbsp; <a href="./privacy.html">Privacy</a></footer>
+
+<script src="./nav.js" defer></script>
+</body>
+</html>

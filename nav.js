@@ -115,6 +115,9 @@
       border-radius:3px;padding:1px 6px;color:#6b7280;flex-shrink:0;
     }
     #pal-empty{padding:14px 18px;color:#4b5563;font-size:.82rem}
+    /* Footer links */
+    footer a{color:#4b5563;text-decoration:none;transition:color .12s}
+    footer a:hover{color:var(--accent)}
   `;
   document.head.appendChild(css);
 

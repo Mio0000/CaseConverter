@@ -1,4 +1,4 @@
-const CACHE = 'devtoolbox-v1';
+const CACHE = 'devtoolbox-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -9,6 +9,8 @@ const ASSETS = [
   './jwt.html',
   './timestamp.html',
   './color.html',
+  './about.html',
+  './privacy.html',
   './nav.js',
   './manifest.json',
   './icons/icon.svg',
