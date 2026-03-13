@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JSON Key Converter — Convert JSON keys to camelCase, snake_case, PascalCase</title>
+<meta name="description" content="Paste JSON and instantly convert all keys to camelCase, snake_case, PascalCase, kebab-case, or SCREAMING_SNAKE_CASE. Recursive, free, no sign-up required.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;
+  --text:#e2e8f0;--muted:#6b7280;--accent:#7c3aed;
+  --green:#10b981;--red:#ef4444;--mono:'SF Mono','Fira Code','Consolas',monospace
+}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 16px 48px}
+
+/* ── Nav ── */
+nav{width:100%;max-width:960px;display:flex;gap:0;margin-bottom:40px;border-bottom:1px solid var(--border);padding-top:32px}
+nav a{
+  padding:10px 22px;font:inherit;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;
+  margin-bottom:-1px;transition:color .15s,border-color .15s
+}
+nav a:hover{color:var(--text)}
+nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+h1{font-size:1.1rem;letter-spacing:.15em;color:var(--muted);margin-bottom:28px;text-transform:uppercase;width:100%;max-width:960px}
+h1 span{color:var(--accent)}
+
+/* ── Controls ── */
+#controls{width:100%;max-width:960px;display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+
+.fmt-btn{
+  padding:6px 14px;font:inherit;font-size:.75rem;letter-spacing:.04em;
+  background:transparent;border:1px solid var(--border);border-radius:5px;
+  color:var(--muted);cursor:pointer;transition:all .1s;white-space:nowrap
+}
+.fmt-btn:hover{border-color:var(--accent);color:var(--accent)}
+.fmt-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+
+.btn{
+  padding:6px 16px;font:inherit;font-size:.78rem;letter-spacing:.04em;
+  background:transparent;border:1px solid var(--border);border-radius:5px;
+  color:var(--muted);cursor:pointer;transition:all .1s;white-space:nowrap
+}
+.btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.ok{border-color:var(--green);color:var(--green)}
+.btn-clear{margin-left:auto}
+
+/* ── Panels ── */
+#panels{width:100%;max-width:960px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:680px){#panels{grid-template-columns:1fr}}
+
+.panel-label{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+
+textarea{
+  width:100%;height:320px;padding:12px 14px;font:0.82rem var(--mono);
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  color:var(--text);outline:none;resize:vertical;transition:border .15s;line-height:1.6
+}
+textarea:focus{border-color:var(--accent)}
+textarea::placeholder{color:var(--muted);font-size:.78rem}
+
+#output-wrap{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:14px;min-height:320px;overflow:auto;position:relative
+}
+#output{font-size:.82rem;line-height:1.6;white-space:pre;color:var(--text);font-family:var(--mono)}
+#output.empty{color:var(--muted);font-style:italic;white-space:normal;font-size:.78rem}
+#output.error{color:var(--red);white-space:pre-wrap;font-size:.78rem}
+
+#copy-row{display:flex;align-items:center;gap:10px;margin-top:10px}
+
+/* ── Stats bar ── */
+#stats{width:100%;max-width:960px;margin-top:12px;font-size:.72rem;color:var(--muted);height:18px}
+#stats b{color:var(--accent)}
+
+footer{margin-top:40px;font-size:.7rem;color:#3a3d4a;width:100%;max-width:960px}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html">Case Converter</a>
+  <a href="table.html">Table Generator</a>
+  <a href="json.html" class="active">JSON Key Converter</a>
+</nav>
+
+<h1>JSON Key <span>Converter</span></h1>
+
+<div id="controls">
+  <button class="fmt-btn active" data-fmt="camel">camelCase</button>
+  <button class="fmt-btn" data-fmt="pascal">PascalCase</button>
+  <button class="fmt-btn" data-fmt="snake">snake_case</button>
+  <button class="fmt-btn" data-fmt="kebab">kebab-case</button>
+  <button class="fmt-btn" data-fmt="screaming">SCREAMING_SNAKE</button>
+  <button class="btn btn-clear" id="btn-clear">Clear</button>
+</div>
+
+<div id="panels">
+  <div>
+    <div class="panel-label">Input JSON</div>
+    <textarea id="inp" placeholder='Paste your JSON here…&#10;&#10;{&#10;  "user_id": 1,&#10;  "first_name": "Alice",&#10;  "address": {&#10;    "zip_code": "2000",&#10;    "country_code": "AU"&#10;  }&#10;}' spellcheck="false"></textarea>
+  </div>
+  <div>
+    <div class="panel-label">Converted output</div>
+    <div id="output-wrap">
+      <pre id="output" class="empty">Paste JSON on the left to convert keys…</pre>
+    </div>
+    <div id="copy-row">
+      <button class="btn" id="btn-copy">Copy to Clipboard</button>
+    </div>
+  </div>
+</div>
+
+<div id="stats"></div>
+
+<footer>no framework · no deps · ~2 KB</footer>
+
+<script>
+(function(){
+  const inp     = document.getElementById('inp');
+  const output  = document.getElementById('output');
+  const stats   = document.getElementById('stats');
+  const btnCopy = document.getElementById('btn-copy');
+  const btnClr  = document.getElementById('btn-clear');
+
+  let currentFmt = 'camel';
+
+  // ── tokenizer (same logic as Case Converter) ──
+  function tokenize(s){
+    s = s.trim();
+    if(!s) return [];
+    if(s.includes('_'))
+      return s.split('_').map(w=>w.toLowerCase()).filter(Boolean);
+    if(s.includes('-'))
+      return s.split('-').map(w=>w.toLowerCase()).filter(Boolean);
+    return s
+      .replace(/([A-Z]+)([A-Z][a-z])/g,'$1 $2')
+      .replace(/([a-z\d])([A-Z])/g,'$1 $2')
+      .trim().split(/\s+/)
+      .map(w=>w.toLowerCase()).filter(Boolean);
+  }
+
+  const cap = w => w.charAt(0).toUpperCase() + w.slice(1);
+
+  const formats = {
+    camel:     ws => ws.length ? ws[0] + ws.slice(1).map(cap).join('') : '',
+    pascal:    ws => ws.map(cap).join(''),
+    snake:     ws => ws.join('_'),
+    kebab:     ws => ws.join('-'),
+    screaming: ws => ws.join('_').toUpperCase()
+  };
+
+  function convertKey(key){
+    const words = tokenize(key);
+    return words.length ? formats[currentFmt](words) : key;
+  }
+
+  // ── recursive key conversion ──
+  function convertObj(val){
+    if(Array.isArray(val))  return val.map(convertObj);
+    if(val !== null && typeof val === 'object'){
+      const out = {};
+      for(const k of Object.keys(val))
+        out[convertKey(k)] = convertObj(val[k]);
+      return out;
+    }
+    return val;
+  }
+
+  function countKeys(val){
+    if(Array.isArray(val)) return val.reduce((a,v)=>a+countKeys(v),0);
+    if(val !== null && typeof val === 'object')
+      return Object.keys(val).length +
+             Object.values(val).reduce((a,v)=>a+countKeys(v),0);
+    return 0;
+  }
+
+  function update(){
+    const raw = inp.value.trim();
+    if(!raw){
+      output.textContent = 'Paste JSON on the left to convert keys…';
+      output.className = 'empty';
+      stats.innerHTML = '';
+      return;
+    }
+
+    let parsed;
+    try{
+      parsed = JSON.parse(raw);
+    } catch(e){
+      output.textContent = 'JSON parse error:\n' + e.message;
+      output.className = 'error';
+      stats.innerHTML = '';
+      return;
+    }
+
+    const converted = convertObj(parsed);
+    output.textContent = JSON.stringify(converted, null, 2);
+    output.className = '';
+
+    const n = countKeys(parsed);
+    const fmtLabel = currentFmt === 'screaming' ? 'SCREAMING_SNAKE_CASE'
+                   : currentFmt === 'camel'     ? 'camelCase'
+                   : currentFmt === 'pascal'    ? 'PascalCase'
+                   : currentFmt === 'snake'     ? 'snake_case'
+                   : 'kebab-case';
+    stats.innerHTML = `<b>${n}</b> key${n===1?'':'s'} converted → <b>${fmtLabel}</b>`;
+  }
+
+  // ── format buttons ──
+  document.querySelectorAll('.fmt-btn').forEach(btn=>{
+    btn.addEventListener('click',function(){
+      document.querySelectorAll('.fmt-btn').forEach(b=>b.classList.remove('active'));
+      this.classList.add('active');
+      currentFmt = this.dataset.fmt;
+      update();
+    });
+  });
+
+  inp.addEventListener('input', update);
+
+  btnClr.addEventListener('click',()=>{
+    inp.value = '';
+    update();
+    inp.focus();
+  });
+
+  btnCopy.addEventListener('click',()=>{
+    const txt = output.textContent;
+    if(!txt || output.classList.contains('empty') || output.classList.contains('error')) return;
+    navigator.clipboard.writeText(txt).then(()=>{
+      btnCopy.textContent = 'Copied!';
+      btnCopy.classList.add('ok');
+      setTimeout(()=>{ btnCopy.textContent='Copy to Clipboard'; btnCopy.classList.remove('ok'); },1400);
+    });
+  });
+
+  inp.focus();
+})();
+</script>
+</body>
+</html>
